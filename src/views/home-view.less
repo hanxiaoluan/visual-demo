@@ -1,0 +1,31 @@
+.home {
+  background: var(--main-bg-color);
+  height: 100vh;
+
+  main {
+    height: calc(100% - 64px);
+    position: relative;
+    background: var(--secondary-bg-color);
+    display: flex;
+
+    aside.sider {
+      position: relative;
+      height: 100%;
+      transition: all .3s;
+      background: var(--main-bg-color);
+      color: var(--text-color);
+      width: 200px;
+    }
+    aside.sider-right {
+      position: relative;
+      height: 100%;
+      transition: all .3s;
+      background: var(--main-bg-color);
+      color: var(--text-color);
+      width: 288px;
+    }
+    section {
+      flex: 1;
+    }
+  }
+}
