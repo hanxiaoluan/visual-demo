@@ -1,11 +1,14 @@
 import './index.less'
+import { useDrag } from '@/hooks/useDrag'
 export default defineComponent({
   name: 'ToolBar',
   setup() {
+    const el = ref()
+    useDrag(el)
     return () => (
       <div class="home-header">
         <a-space class="toolbar">
-          <a-button>JSON</a-button>
+          <a-button ref={el}>JSON</a-button>
           <a-button>导入</a-button>
           <a-button>导出</a-button>
           <a-button>撤销</a-button>

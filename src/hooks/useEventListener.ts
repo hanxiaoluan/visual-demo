@@ -1,5 +1,5 @@
 import { tryOnScopeDispose } from './tryOnScopeDispose'
-
+import { unrefElement } from '@/utils/unrefElement'
 export function useEventListener<E extends keyof HTMLElementEventMap>(
   target: MaybeRef<HTMLElement | null | undefined>,
   event: Arrayable<E>, 
@@ -19,7 +19,7 @@ export function useEventListener<E extends keyof HTMLElementEventMap>(
     return () => el.removeEventListener(event, listener, options)
   }
 
-  const stopWatch = watch(() => unref(target), el => {
+  const stopWatch = watch(() => unrefElement(target), el => {
     cleanup()
     if (!el) return
     const newCleans = events.flatMap(e => {
@@ -27,7 +27,7 @@ export function useEventListener<E extends keyof HTMLElementEventMap>(
     })
     
     cleanups.push(...newCleans)
-  },{ immediate: true, flush: 'post' })
+  }, { immediate: true, flush: 'post' })
   const stop = () => {
     stopWatch()
     cleanup()
