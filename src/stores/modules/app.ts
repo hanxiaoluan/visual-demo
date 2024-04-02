@@ -9,9 +9,15 @@ interface CanvasStyleData {
   background: string
   fontSize: number
 }
+
+export enum EditorMode  {
+  EDIT = 'EDIT',
+  PREVIEW = 'PREVIEW'
+}
 interface AppState {
   canvasStyleData: CanvasStyleData
   isDarkMode: boolean
+  mode: EditorMode
 }
 
 export const useAppStore = defineStore('app', {
@@ -25,7 +31,8 @@ export const useAppStore = defineStore('app', {
       background: '#fff',
       fontSize: 14,
     },
-    isDarkMode: false
+    isDarkMode: false,
+    mode: EditorMode.EDIT
   }),
   actions: {
     aceSetCanvasData(state: Recordable<CanvasStyleData>) {
@@ -33,6 +40,9 @@ export const useAppStore = defineStore('app', {
     },
     setDarkMode(isDarkMode: boolean) {
       this.isDarkMode = isDarkMode
+    },
+    setEditorMode (mode: EditorMode) {
+      this.mode = mode
     }
   }
 })

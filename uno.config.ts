@@ -8,5 +8,5 @@ export default defineConfig({
       mdi: () => import('@iconify-json/mdi/icons.json').then(m => m.default)
     }
   })],
-  safelist: [...iconList]
+  safelist: [...iconList,'i-mdi-checkbox-blank-circle-outline']
 })

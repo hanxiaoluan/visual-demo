@@ -1,0 +1,22 @@
+.text {
+  width: 100%;
+  height: 100%;
+  display: table;
+
+  .text-inner {
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    word-break: break-all;
+    padding: 4px;
+    &.text-inner-editable {
+      cursor: text;
+      height: 100%;
+    }
+  }
+
+  &.preview {
+    user-select: none;
+  }
+}

@@ -1,5 +1,7 @@
 import { cloneDeep, uniqueId } from 'lodash-es'
 import { useAppStore } from '@/stores/modules/app'
+import { useComponentStore } from '@/stores/modules/component'
+
 import ToolBar from './tool-bar'
 import ComponentList from './component-list'
 import RealTimeComponentList from './real-time-component-list'
@@ -12,6 +14,7 @@ import './home-view.less'
 export default defineComponent({
   setup () {
     const appState = useAppStore()
+    const componentStore = useComponentStore()
     const onDrop = (e: DragEvent) => {
       console.log(e)
       e.preventDefault()
@@ -23,9 +26,11 @@ export default defineComponent({
       dragComp.style.left = e.clientX - editorRect.x
       dragComp.id = uniqueId()
       setComponentSizeWithScale(dragComp, appState.canvasStyleData.scale)
+      componentStore.addComponent(dragComp)
     }
     const onDragOver = (e: DragEvent) => {
       e.preventDefault()
+      e.dataTransfer!.dropEffect = 'copy'
     }
     const onMousedown = (e: MouseEvent) => {
 

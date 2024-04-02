@@ -1,0 +1,20 @@
+.shape {
+  position: absolute;
+  &:hover {
+    cursor: move;
+  }
+  &.shape-active {
+    outline: 1px solid #70c0ff;
+    user-select: none;
+  }
+  .shape-point {
+    position: absolute;
+    border: 1px solid var(--primary-6);
+    color: var(--primary-6);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    z-index: 1;
+    display: block;
+  }
+}

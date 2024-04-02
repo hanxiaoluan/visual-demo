@@ -9,8 +9,8 @@ export interface ComponentType {
   style: CSSProperties
 }
 // 公共样式
-export const commonStyle: CSSProperties = {
-  rotate: '0deg',
+export const commonStyle = {
+  rotate: 0,
   opacity: 1
 }
 
@@ -22,7 +22,7 @@ export const commonAttr = {
 
 const _list: ComponentType[] = [
   {
-    component: 'VText',
+    component: 'text',
     label: '文字',
     propValue: '双击编辑文字',
     icon: 'i-mdi-format-text',
@@ -37,7 +37,7 @@ const _list: ComponentType[] = [
   },
   },
   {
-    component: 'VButton',
+    component: 'button',
     label: '按钮',
     propValue: '按钮',
     icon: 'i-mdi-button-pointer',
@@ -93,7 +93,7 @@ const _list: ComponentType[] = [
 const componentList: ComponentType[] = []
 for (let i = 0; i < _list.length; i++) {
   const item = _list[i]
-  item.style = {...commonStyle, ...item.style}
+  item.style = {...commonStyle, ...item.style} as CSSProperties
   componentList.push(item)
 }
 
