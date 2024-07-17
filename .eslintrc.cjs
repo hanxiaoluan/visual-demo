@@ -1,6 +1,5 @@
-/* eslint-env node */
-require('@rushstack/eslint-patch/modern-module-resolution')
 
+// eslint-disable-next-line no-undef
 module.exports = {
   root: true,
   'extends': [
@@ -11,5 +10,9 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    "vue/multi-word-component-names": 'off',
+    'vue/no-reserved-component-names': 'off'
   }
 }

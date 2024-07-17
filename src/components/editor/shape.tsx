@@ -1,8 +1,12 @@
 import { useComponentStore } from '@/stores/modules/component'
 import { setInEditorStatus, setIsClickComponent } from '@/utils/editor'
+import { getEditor } from '@/utils/editor'
+import { getStyle } from '@/utils/style'
 import type { ComponentType } from "@/custom-components"
 import type { PropType } from "vue"
 import './shape.less'
+// import { useDrag as useDraggable} from '@/hooks/useDrag'
+import {useDraggable} from '@vueuse/core'
 const POINT_LIST = ['lt', 't', 'rt', 'r', 'rb', 'b', 'lb', 'l'] as const // 八个方向
 const POINT_LIST2 = ['r', 'l'] as const
 const ANGLE_TO_CURSOR = [
@@ -40,6 +44,18 @@ export default defineComponent({
       return result
     }
     const cursorMap: Record<typeof POINT_LIST[number], string>= getCursor()
+    const dragHandle = ref(null)
+
+    const {position, isDragging} = useDraggable(dragHandle, {
+      containerElement: getEditor(),
+      initialValue: {
+        x: props.element.style.left as number,
+        y: props.element.style.top as number
+      }
+    })
+    function onMove() {
+      console.log(position.value)
+    }
     const getPointStyle = (point: typeof POINT_LIST[number]) => {
       const {width, height} = props.element.style as {width: number, height: number}
       const isTop = /t/.test(point)
@@ -71,7 +87,13 @@ export default defineComponent({
         cursor: cursorMap[point]
       }
     }
-
+    const styles = computed(() => {
+      return {
+        ...getStyle(props.element.style),
+        left: position.value.x + 'px',
+        top: position.value.y + 'px'
+      }
+    })
     const onShapeClick = (e: MouseEvent) => {
       setInEditorStatus(true)
       setIsClickComponent(true)
@@ -80,7 +102,7 @@ export default defineComponent({
     }
 
     return () => (
-      <div class={['shape',{'shape-active': props.active}]} onClick={onShapeClick}>
+      <div ref={dragHandle} class={['shape',{'shape-active': props.active}]} onClick={onShapeClick} style={styles.value}>
         {
           props.active && POINT_LIST.map(item => (
             <span class={`shape-point shape-point-${item} i-mdi-checkbox-blank-circle-outline`} style={getPointStyle(item)}></span>

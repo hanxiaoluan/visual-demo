@@ -52,7 +52,7 @@ export default defineComponent({
         <Grid isDarkMode={appStore.isDarkMode} />
         {
           compStore.componentData.map((comp, index) => {
-            return <Shape element={comp} index={index} style={getStyle(comp.style)} active={compStore.curComponent?.id === comp.id}>
+            return <Shape element={comp} index={index} active={compStore.curComponent?.id === comp.id}>
               {renderComponent(comp)}
             </Shape>
           })

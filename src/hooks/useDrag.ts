@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { throttleByRaf } from '@/utils'
 import { useEventListener } from './useEventListener'
 type Position = {
   x: number
@@ -19,7 +20,8 @@ export interface UseDragOptions {
   pointerTypes?: PointerType[]
   disabled?: boolean
   draggingElement?: MaybeRef<HTMLElement | Window | Document | null | undefined>,
-  containerElement?: MaybeRef<HTMLElement | SVGElement | null | undefined>
+  containerElement?: MaybeRef<HTMLElement | SVGElement | null | undefined>,
+  isThrottle?: Boolean
 }
 
 export function useDrag (target: MaybeRef<HTMLElement | null | undefined>, options: UseDragOptions = {}) {
@@ -29,11 +31,12 @@ export function useDrag (target: MaybeRef<HTMLElement | null | undefined>, optio
     onStart,
     onMove,
     onEnd,
-    initialValue = {x: 0, y: 0},
+    initialValue,
     draggingElement = window,
-    containerElement
+    containerElement,
+    isThrottle = true
   } = options
-  const position = ref<Position>(unref(initialValue))
+  const position = ref<Position>({x:0, y: 0})
   const pressedDelta = ref<Position>()
   
   const filterPoint = (e: PointerEvent) => {
@@ -43,7 +46,6 @@ export function useDrag (target: MaybeRef<HTMLElement | null | undefined>, optio
   const start = (e:PointerEvent) => {
     // 这个属性只能够表明在触发事件的单个或多个按键按下或释放过程中哪些按键被按下了
     if (e.button !== 0) return 
-    console.log(e)
     if (options.disabled || !filterPoint(e)) return
     const container = unref(containerElement)
     const containerRect = unref(container)?.getBoundingClientRect()
@@ -81,8 +83,11 @@ export function useDrag (target: MaybeRef<HTMLElement | null | undefined>, optio
   }
   const config = {capture: true}
   useEventListener(draggingHandle, 'pointerdown', start, config)
-  useEventListener(window as any, 'pointermove', move, config)
+  useEventListener(window as any, 'pointermove', isThrottle ? throttleByRaf(move) : move, config)
   useEventListener(window as any, 'pointerup', end, config)
-  return {...toRefs(position) as any, position, isDragging: computed(() => !!pressedDelta.value)}
+  return {
+    position,
+    isDragging: computed(() => !!pressedDelta.value)
+  }
 }
 export type UseDraggableReturn = ReturnType<typeof useDrag>

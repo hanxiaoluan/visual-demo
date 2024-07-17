@@ -39,6 +39,8 @@ export default defineComponent({
     }
     const onBlur =(e:any) => {
       console.log(e.target.innerHTML, element.value)
+      // eslint-disable-next-line vue/no-mutating-props
+      props.element.propValue = (e.target as HTMLElement).innerHTML
     }
     const renderEdit = () => {
       return (
