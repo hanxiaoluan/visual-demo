@@ -1,9 +1,17 @@
 <template>
-  <div class="cell-demo">
+  <!-- <div class="cell-demo">
     <a-table :columns="columns" :data="data" :bordered="{cell: true}" :table-layout-fixed="false"/>
   </div>
   <div class="cell-demo">
     <Table :columns="columns" :data="data" />
+  </div> -->
+  <div class="cell-demo">
+    <a-table row-key="name" :columns="columns" :data="data" :row-selection="rowSelection"
+             v-model:selectedKeys="selectedKeys" />
+  </div>
+  <div class="cell-demo">
+    <Table row-key="name" :columns="columns" :data="data" :row-selection="rowSelection"
+      v-model:selectedKeys="selectedKeys" />
   </div>
 </template>
 
@@ -13,29 +21,33 @@ import Table from '@/components/table/table'
 export default {
   components: { Table },
   setup() {
-    const columns = reactive([
+    const selectedKeys = ref(['Jane Doe', 'Alisa Ross']);
+
+    const rowSelection = reactive({
+      type: 'checkbox',
+      showCheckedAll: true,
+      onlyCurrent: false,
+    });
+    const pagination = {pageSize: 5}
+
+    const columns = [
       {
         title: 'Name',
         dataIndex: 'name',
-        width: 150,
-        minWidth: 100,
       },
       {
         title: 'Salary',
         dataIndex: 'salary',
-        width: 120,
-        minWidth: 80,
       },
       {
         title: 'Address',
         dataIndex: 'address',
-        width: 300,
       },
       {
         title: 'Email',
         dataIndex: 'email',
       },
-    ]);
+    ]
     const data = reactive([{
       key: '1',
       name: 'Jane Doe',
@@ -53,7 +65,8 @@ export default {
       name: 'Kevin Sandra',
       salary: 22000,
       address: '31 Park Road, London',
-      email: 'kevin.sandra@example.com'
+      email: 'kevin.sandra@example.com',
+      disabled: true
     }, {
       key: '4',
       name: 'Ed Hellen',
@@ -66,13 +79,46 @@ export default {
       salary: 27000,
       address: '62 Park Road, London',
       email: 'william.smith@example.com'
+    }, {
+      key: '6',
+      name: 'Jane Doe 2',
+      salary: 15000,
+      address: '32 Park Road, London',
+      email: 'jane.doe@example.com'
+    }, {
+      key: '7',
+      name: 'Alisa Ross 2',
+      salary: 28000,
+      address: '35 Park Road, London',
+      email: 'alisa.ross@example.com'
+    }, {
+      key: '8',
+      name: 'Kevin Sandra 2',
+      salary: 26000,
+      address: '31 Park Road, London',
+      email: 'kevin.sandra@example.com',
+    }, {
+      key: '9',
+      name: 'Ed Hellen 2',
+      salary: 18000,
+      address: '42 Park Road, London',
+      email: 'ed.hellen@example.com'
+    }, {
+      key: '10',
+      name: 'William Smith 2',
+      salary: 12000,
+      address: '62 Park Road, London',
+      email: 'william.smith@example.com'
     }]);
 
     return {
+      rowSelection,
       columns,
-      data
+      data,
+      selectedKeys,
+      pagination
     }
-  },
+  }
 }
 </script>
 

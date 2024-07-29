@@ -1,5 +1,5 @@
 import type { PropType } from "vue"
-
+import type { TableOperationColumn } from './interface'
 export default defineComponent({
   name: 'TableColGroup',
   props: {
@@ -9,6 +9,10 @@ export default defineComponent({
     },
     columnWidth: {
       type: Object as PropType<Record<string, number>>
+    },
+    operations: {
+      type: Array as PropType<TableOperationColumn[]>,
+      required: true
     }
   },
   setup(props) {
@@ -24,6 +28,11 @@ export default defineComponent({
     }
     return () => (
       <colgroup>
+        {
+          props.operations.map((operation) => {
+            return <col key={`l-col-${operation.name}`} class={`l-table-${operation.name}-col`} style={fixedWidth(operation.width)} />
+          })
+        }
         {
           props.dataColumns.map(col => {
             return (

@@ -1,5 +1,5 @@
 import { createVNode } from 'vue'
-const prefixCls = 'table-tr'
+const prefixCls = 'l-table-tr'
 
 export default defineComponent({
   name: 'Tr',

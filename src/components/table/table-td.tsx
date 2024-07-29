@@ -1,12 +1,12 @@
 import {createVNode} from 'vue'
-
+import type {TableDataWithRaw} from './interface'
 const prefixCls = 'l-table-td'
 const cellPrefixCls = 'l-table-cell'
 export default defineComponent({
   name: 'Td',
   props: {
     record: {
-      type: Object as PropType<any>,
+      type: Object as PropType<TableDataWithRaw>,
       default: () => ({})
     },
     column: {
@@ -28,7 +28,7 @@ export default defineComponent({
     ])
     const renderCell = () => {
       return <span class={cellCls.value}>
-        {props.record[props.column.dataIndex]}
+        {props.record.raw[props.column.dataIndex]}
       </span>
     }
     return {

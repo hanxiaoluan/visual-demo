@@ -46,6 +46,17 @@
       text-align: center;
     }
   }
+  // 选择框操作单元格
+  &-th&-operation, &-td&-operation {
+    text-align: center;
+  }
+  &-th&-operation &-cell,
+  &-td&-operation &-cell {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  
   &-border {
     border-top: 1px solid @border-color;
     border-left: 1px solid @border-color;
@@ -59,5 +70,16 @@
     }
   }
 
+  &-hover {
+    .l-table-tr:hover .l-table-td{
+      background-color: rgb(246, 248, 250);
+    }
+  }
+
+  .l-table-selection-checkbox-col, .l-table-selection-radio-col {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+  }
 }
 
