@@ -91,6 +91,7 @@ export default defineComponent({
     provide(tableInjectionKey, reactive({
       onSelect: handleSelect
     }))
+
     const cls = computed(() => [
       prefixCls,
       {
