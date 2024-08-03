@@ -24,7 +24,7 @@ export default {
     const selectedKeys = ref(['Jane Doe', 'Alisa Ross']);
 
     const rowSelection = reactive({
-      type: 'checkbox',
+      type: 'radio',
       showCheckedAll: true,
       onlyCurrent: false,
     });

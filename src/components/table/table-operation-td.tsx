@@ -1,8 +1,7 @@
 import { tableInjectionKey } from './context'
 import type { TableContext } from './context'
 import type { TableDataWithRaw, TableOperationColumn } from './interface'
-import { Checkbox } from '@arco-design/web-vue'
-
+import { Checkbox, Radio } from '@arco-design/web-vue'
 const prefixCls = 'l-table'
 export default defineComponent({
   name: 'OperationTd',
@@ -19,9 +18,8 @@ export default defineComponent({
       required: true
     }
   },
-  components: { Checkbox },
+  components: { Checkbox, Radio },
   setup(props) {
-    console.log(props.selectedRowKeys)
     const tableCtx = inject<Partial<TableContext>>(tableInjectionKey, {})
     const cls = computed(() => [
       `${prefixCls}-td`,
@@ -30,23 +28,44 @@ export default defineComponent({
     const selectionStatus = computed(() => {
 
     })
-    return {
-      cls,
-      tableCtx
-    }
-  },
-  render() {
-    const {cls, selectedRowKeys, record, tableCtx} = this
-    return (
-      <td class={cls}>
-        <span class={`${prefixCls}-cell`}>
+    const renderContent = () => {
+      const {operationColumn} = props
+      if (operationColumn.name === 'selection-radio') {
+        return (
+          <Radio 
+            modelValue={props.selectedRowKeys?.includes(props.record.key)}
+            onChange={checked => tableCtx.onSelect?.(checked as boolean, props.record)}
+            // @ts-ignore
+            onClick={(ev: Event) => ev.stopPropagation()}
+            disabled={props.record.disabled} />
+        )}
+
+      if (operationColumn.name === 'selection-checkbox') {
+        return (
           <Checkbox 
-            modelValue={selectedRowKeys?.includes(record.key)}
-            onChange={checked => tableCtx.onSelect?.(checked as boolean, record)}
-            disabled={record.disabled}
+            modelValue={props.selectedRowKeys?.includes(props.record.key)}
+            onChange={checked => tableCtx.onSelect?.(checked as boolean, props.record)}
+            disabled={props.record.disabled}
             // @ts-ignore
             onClick={(ev: Event) => ev.stopPropagation()}
           />
+        )
+      }
+    }
+    return {
+      cls,
+      tableCtx,
+      renderContent
+    }
+  },
+  render() {
+    const {cls, selectedRowKeys, record, tableCtx, renderContent} = this
+    return (
+      <td class={cls}>
+        <span class={`${prefixCls}-cell`}>
+          {
+            renderContent()
+          }
         </span>
       </td>
     )

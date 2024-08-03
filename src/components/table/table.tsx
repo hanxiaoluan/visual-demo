@@ -86,10 +86,55 @@ export default defineComponent({
       return traverse(props.data ?? [])
     })
 
-    const {selectedRowKeys, handleSelect, currentSelectedRowKeys} = useRowSelection({selectedKeys, defaultSelectedKeys, rowSelection, emit})
+    const currentAllRowKeys = computed(() => {
+      const keys: (string | number)[] = []
+      const traverse = (data: TableDataWithRaw[]) => {
+        for (const record of data) {
+          keys.push(record.key)
+          if (record.children) {
+            traverse(record.children)
+          }
+        }
+      }
+      traverse(processedData.value ?? [])
+      return keys
+    })
+
+    const currentAllEnabledRowKeys = computed(() => {
+      const keys: (string | number)[] = []
+      const traverse = (data: TableDataWithRaw[]) => {
+        for (const record of data) {
+          if (!record.disabled) {
+            keys.push(record.key)
+          }
+          if (record.children) {
+            traverse(record.children)
+          }
+        }
+      }
+      traverse(processedData.value ?? [])
+      return keys
+    })
+    const {
+      selectedRowKeys, 
+      handleSelect, 
+      currentSelectedRowKeys,
+
+      handleSelectAll
+    } = useRowSelection({
+      selectedKeys, 
+      defaultSelectedKeys, 
+      currentAllRowKeys,
+      currentAllEnabledRowKeys,
+      rowSelection, 
+      emit
+    })
 
     provide(tableInjectionKey, reactive({
-      onSelect: handleSelect
+      onSelect: handleSelect,
+      onSelectAll: handleSelectAll,
+      currentSelectedRowKeys,
+      currentAllEnabledRowKeys
     }))
     const cls = computed(() => [
       prefixCls,
@@ -107,7 +152,9 @@ export default defineComponent({
               <Tr>
                 {
                   operations.value.map((operation, index) => {
-                    return <OperationTh operationColumn={operation} />
+                    return <OperationTh 
+                      operationColumn={operation} 
+                      showSelectAll={Boolean(props.rowSelection?.showCheckedAll && operation.name === 'selection-checkbox')} />
                   })
                 }
                 {
