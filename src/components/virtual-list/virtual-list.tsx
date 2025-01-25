@@ -1,7 +1,7 @@
 import { isNumber, isObject } from "lodash-es"
 import { defineComponent, computed, createVNode } from "vue"
 import VirtualListItem from './virtual-list-item'
-const prefixCls = 'virtual-list'
+import { useSize } from "./use-size"
 
 export default defineComponent({
   name: 'VirtualList',
@@ -84,7 +84,7 @@ export default defineComponent({
       }
     })
     const dataKeys = computed(() => {
-      data.value.map((item: any, index) => {
+      return data.value.map((item: any, index) => {
         return (item[itemKey.value] ?? index) as string | number
       })
     })
@@ -94,7 +94,7 @@ export default defineComponent({
       }
       return data.value
     })
-
+    useSize({dataKeys, contentRef, fixedSize, estimatedSize, buffer})
     const onScroll = (e: Event) => {
       console.log('ssssss')
     }
