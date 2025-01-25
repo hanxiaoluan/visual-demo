@@ -24,6 +24,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['srcoll'],
   setup(props, {emit}) {
     const visible = ref(false)
     const trackRef: VNodeRef = ref<HTMLElement>()
