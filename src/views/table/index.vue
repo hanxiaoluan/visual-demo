@@ -1,34 +1,72 @@
 <template>
-  <!-- <div class="cell-demo">
-    <a-table :columns="columns" :data="data" :bordered="{cell: true}" :table-layout-fixed="false"/>
-  </div>
   <div class="cell-demo">
-    <Table :columns="columns" :data="data" />
-  </div> -->
-  <div class="cell-demo">
-    <a-table row-key="name" :columns="columns" :data="data" :row-selection="rowSelection"
-             v-model:selectedKeys="selectedKeys" />
+    <a-form layout="inline" :model="form">
+      <a-form-item label="Border" field="border">
+        <!-- <a-switch v-model="form.border" /> -->
+      </a-form-item>
+      <a-form-item label="Hover" field="hover">
+        <a-switch v-model="form.hover" />
+      </a-form-item>
+      <a-form-item label="stripe" field="stripe">
+        <a-switch v-model="form.stripe" />
+      </a-form-item>
+      <a-form-item label="checkbox" field="checkbox">
+        <a-switch v-model="form.checkbox" />
+      </a-form-item>
+      <a-form-item label="checkAll" field="checkAll">
+        <a-switch v-model="rowSelection.showCheckedAll" />
+      </a-form-item>
+      <a-form-item label="loading" field="loading">
+        <a-switch v-model="form.loading" />
+      </a-form-item>
+      <a-form-item label="tableHeader" field="tableHeader">
+        <a-switch v-model="form.tableHeader" />
+      </a-form-item>
+      <a-form-item label="noData" field="noData">
+        <a-switch v-model="form.noData" />
+      </a-form-item>
+    </a-form>
+    <LTable
+      :columns="columns"
+      :data="form.noData ? [] : data"
+      :bordered="form.border"
+      :hoverable="form.hover"
+      :stripe="form.stripe"
+      :loading="form.loading"
+      :show-header="form.tableHeader"
+      @rowDblclick="onRowDblclick"
+      :row-selection="form.checkbox ? rowSelection : undefined"
+    />
   </div>
-  <div class="cell-demo">
-    <Table row-key="name" :columns="columns" :data="data" :row-selection="rowSelection"
-      v-model:selectedKeys="selectedKeys" />
-  </div>
+  
 </template>
 
 <script>
 import { reactive } from 'vue';
-import Table from '@/components/table/table'
+import LTable from '@/components/table';
 export default {
-  components: { Table },
+  components: { LTable },
   setup() {
-    const selectedKeys = ref(['Jane Doe', 'Alisa Ross']);
+    const form = reactive({
+      border: {
+        wrapper: false,
+        cell: false,
+        headerCell: false,
+        bodyCell: true
+      },
+      borderCell: false,
+      hover: true,
+      stripe: false,
+      checkbox: true,
+      loading: false,
+      tableHeader: true,
+      noData: false
+    });
 
     const rowSelection = reactive({
-      type: 'radio',
-      showCheckedAll: true,
-      onlyCurrent: false,
+      type: 'checkbox',
+      showCheckedAll: true
     });
-    const pagination = {pageSize: 5}
 
     const columns = [
       {
@@ -47,8 +85,9 @@ export default {
         title: 'Email',
         dataIndex: 'email',
       },
-    ]
-    const data = reactive([{
+    ];
+
+    const data = [{
       key: '1',
       name: 'Jane Doe',
       salary: 23000,
@@ -65,8 +104,7 @@ export default {
       name: 'Kevin Sandra',
       salary: 22000,
       address: '31 Park Road, London',
-      email: 'kevin.sandra@example.com',
-      disabled: true
+      email: 'kevin.sandra@example.com'
     }, {
       key: '4',
       name: 'Ed Hellen',
@@ -79,54 +117,25 @@ export default {
       salary: 27000,
       address: '62 Park Road, London',
       email: 'william.smith@example.com'
-    }, {
-      key: '6',
-      name: 'Jane Doe 2',
-      salary: 15000,
-      address: '32 Park Road, London',
-      email: 'jane.doe@example.com'
-    }, {
-      key: '7',
-      name: 'Alisa Ross 2',
-      salary: 28000,
-      address: '35 Park Road, London',
-      email: 'alisa.ross@example.com'
-    }, {
-      key: '8',
-      name: 'Kevin Sandra 2',
-      salary: 26000,
-      address: '31 Park Road, London',
-      email: 'kevin.sandra@example.com',
-    }, {
-      key: '9',
-      name: 'Ed Hellen 2',
-      salary: 18000,
-      address: '42 Park Road, London',
-      email: 'ed.hellen@example.com'
-    }, {
-      key: '10',
-      name: 'William Smith 2',
-      salary: 12000,
-      address: '62 Park Road, London',
-      email: 'william.smith@example.com'
-    }]);
+    }];
 
     return {
+      form,
       rowSelection,
       columns,
       data,
-      selectedKeys,
-      pagination
+      onRowClick: (row, ev) => console.log(row, ev),
+      onRowDblclick: (row, ev) => console.log(row, ev),
     }
-  }
+  },
 }
 </script>
 
 <style lang="less">
 .cell-demo {
-    margin-top: 24px;
-    padding: 48px;
-    border: 1px solid var(--color-border);
-    border-radius: 2px 2px 0 0;
+  margin-top: 24px;
+  padding: 48px;
+  border: 1px solid #cecece;
+  border-radius: 2px 2px 0 0;
 }
 </style>

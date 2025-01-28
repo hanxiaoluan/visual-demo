@@ -3,6 +3,7 @@ import type {
   TableOperationColumn,
   TableData,
   TableDataWithRaw,
+  TableBorder,
 } from './interface'
 import TableBody from './table-tbody'
 import Tr from './table-tr'
@@ -12,9 +13,11 @@ import OperationTh from './table-operation-th'
 import Thead from './table-thead'
 import Th from './table.th'
 import OperationTd from './table-operation-td'
+import { Empty } from '@arco-design/web-vue'
 import './style/index.less'
 import { useRowSelection } from './hooks/use-row-selection'
 import { tableInjectionKey } from './context'
+import { useBordered } from './hooks/use-border'
 const prefixCls = `l-table`
 
 export default defineComponent({
@@ -33,8 +36,12 @@ export default defineComponent({
       default: true,
     },
     bordered: {
-      type: Boolean,
+      type: [Boolean, Object] as PropType<boolean | TableBorder>,
       default: true,
+    },
+    stripe: {
+      type: Boolean,
+      default: false,
     },
     selectedKeys: {
       type: Array as PropType<(string | number)[]>,
@@ -53,7 +60,7 @@ export default defineComponent({
   emits: {
     'update:selectedKeys': (rowKeys: (string | number)[]) => true,
   },
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const {
       data,
       columns,
@@ -63,6 +70,7 @@ export default defineComponent({
       rowKey,
     } = toRefs(props)
 
+    const { borderCls } = useBordered(props.bordered)
     const operations = computed(() => {
       const res: TableOperationColumn[] = []
       let selection: TableOperationColumn | undefined
@@ -153,6 +161,52 @@ export default defineComponent({
         [`${prefixCls}-hover`]: props.hoverable,
       },
     ])
+
+    const renderRecord = (record: TableDataWithRaw, rowIndex: number) => {
+      return (
+        <Tr
+          // @ts-ignore
+          onClick={(ev: Event) => handleRowClick(record, ev)}
+          onDblclick={(ev: Event) => handleRowDblclick(record, ev)}>
+          {
+            // 选择列
+            operations.value.map((operation, index) => {
+              return (
+                <OperationTd
+                  operationColumn={operation}
+                  selectedRowKeys={currentSelectedRowKeys.value}
+                  record={record}
+                />
+              )
+            })
+          }
+          {columns.value.map((column) => {
+            return <Td record={record} column={column} />
+          })}
+        </Tr>
+      )
+    }
+    const renderEmpty = () => {
+      return (
+        <Tr empty>
+          <Td colSpan={columns.value.length + operations.value.length}>
+            {slots.empty?.() ?? <Empty />}
+          </Td>
+        </Tr>
+      )
+    }
+    // 渲染tableBody
+    const renderBody = () => {
+      return (
+        <TableBody>
+          {processedData.value.length > 0
+            ? processedData.value.map((record, index) => {
+                return renderRecord(record, index)
+              })
+            : renderEmpty()}
+        </TableBody>
+      )
+    }
     const render = () => {
       return (
         <div class={cls.value}>

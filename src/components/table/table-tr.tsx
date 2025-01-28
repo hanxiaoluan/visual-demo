@@ -8,11 +8,18 @@ export default defineComponent({
     record: {
       type: Object as PropType<any>,
       default: () => ({})
+    },
+    empty: {
+      type: Boolean as PropType<boolean>,
+      default: false
     }
   },
-  setup() {
+  setup(props) {
     const cls = computed(() => [
-      `${prefixCls}`
+      `${prefixCls}`,
+      {
+        [`${prefixCls}-empty`]: props.empty
+      }
     ])
 
     return {

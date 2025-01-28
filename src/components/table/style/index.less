@@ -60,9 +60,10 @@
   &-border {
     border-top: 1px solid @border-color;
     border-left: 1px solid @border-color;
+  }
 
+  &-border-cell {
     .l-table-th {
-      border-bottom: 1px solid @border-color;
       border-right: 1px solid @border-color;
     }
     .l-table-td {
@@ -70,9 +71,39 @@
     }
   }
 
+  &-border-header-cell {
+    .l-table-th {
+      border-right: 1px solid @border-color;
+      border-bottom: 1px solid @border-color;
+    }
+  }
+
+  &-border&-border-header-cell {
+    thead {
+      .l-table-th:last-child {
+        border-right: 0;
+      }
+    }
+  }
+
+  &-border-body-cell {
+    .l-table-td:not(:last-child) {
+      border-right: 1px solid @border-color;
+    }
+  }
   &-hover {
     .l-table-tr:hover .l-table-td{
       background-color: rgb(246, 248, 250);
+    }
+  }
+
+  &-stripe {
+    &:not(.l-table-dragging) {
+      .l-table-tr:not(.l-table-tr-empty):nth-child(even) {
+        .l-table-td:not(.l-table-col-fixed-left):not(.l-table-col-fixed-right) {
+          background-color: rgb(247, 248, 250);
+        }
+      }
     }
   }
 

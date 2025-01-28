@@ -13,14 +13,29 @@ export default defineComponent({
       type: Object as PropType<any>,
       default: () => ({}),
     },
+    rowSpan: {
+      type: Number as PropType<number>,
+      default: 1,
+    },
+    colSpan: {
+      type: Number as PropType<number>,
+      default: 1,
+    },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const style = computed(() => {})
     const cls = computed(() => [`${prefixCls}`])
     const cellCls = computed(() => [
       `${cellPrefixCls}`,
       `${cellPrefixCls}-align-${props.column.align ?? 'left'}`,
     ])
+
+    // 渲染单元格的内容
+    const renderContent = () => {
+      if (slots.default) return slots.default()
+      return props.record.raw[props.column.dataIndex]
+    }
+    // 渲染单元格
     const renderCell = () => {
       return (
         <span class={cellCls.value}>

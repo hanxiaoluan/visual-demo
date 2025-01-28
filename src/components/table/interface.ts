@@ -27,3 +27,10 @@ export interface TableDataWithRaw {
   disabled?: boolean
   children?: TableDataWithRaw[]
 }
+
+export interface TableBorder {
+  wrapper?: boolean
+  cell?: boolean
+  headerCell?: boolean
+  bodyCell?: boolean
+}
