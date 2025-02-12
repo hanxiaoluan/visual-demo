@@ -2,7 +2,7 @@ import { isNumber, isObject } from "lodash-es"
 import { defineComponent, computed, createVNode } from "vue"
 import VirtualListItem from './virtual-list-item'
 import { useSize } from "./use-size"
-
+import type { ScrollOptions } from './interface'
 export default defineComponent({
   name: 'VirtualList',
   props: {
@@ -88,17 +88,35 @@ export default defineComponent({
         return (item[itemKey.value] ?? index) as string | number
       })
     })
+    
+    const { 
+      frontPadding,
+      behindPadding,
+      start,
+      end,
+      getStartByScroll,
+      setItemSize,
+      hasItemSize,
+      setStart,
+      getScrollOffset
+    }
+    = useSize({dataKeys, contentRef, fixedSize, estimatedSize, buffer})
+
     const currentList = computed(() => {
       if (props.threshold && data.value.length <= props.threshold) {
         return data.value
       }
-      return data.value
+      return data.value.slice(start.value, end.value + 1)
     })
-    useSize({dataKeys, contentRef, fixedSize, estimatedSize, buffer})
     const onScroll = (e: Event) => {
       console.log('ssssss')
+      const {scrollTop, scrollHeight, offsetHeight} = e.target as HTMLElement
+      console.log(e.target, scrollTop, scrollHeight, offsetHeight)
     }
 
+    const scrollTo = (options: ScrollOptions) => {
+
+    }
     return {
       mergedComponent,
       containerRef,
@@ -106,22 +124,41 @@ export default defineComponent({
       currentList,
       style,
       dataKeys,
-      onScroll
+      onScroll,
+      frontPadding,
+      behindPadding,
+      setItemSize,
+      hasItemSize
     }
   },
   render() {
-    const {mergedComponent, containerRef, contentRef, style, currentList, paddingPosition, listAttrs, contentAttrs} = this
+    const {mergedComponent, 
+      containerRef, 
+      frontPadding, 
+      behindPadding, 
+      contentRef, 
+      style, 
+      currentList, 
+      paddingPosition,
+      setItemSize,
+      hasItemSize,
+      listAttrs, 
+      contentAttrs} = this
    
     return (
       <div ref={containerRef} class="virtual-list" style={style} onScroll={this.onScroll}>
         <div style={paddingPosition === 'list' ? {} : {}} {...listAttrs}>
-          <div style={paddingPosition === 'content' ? {} : {}} {...contentAttrs} ref={contentRef}>
+          <div style={paddingPosition === 'content' ? { paddingTop: `${frontPadding}px`,
+                paddingBottom: `${behindPadding}px`, } : {}} {...contentAttrs} ref={contentRef}>
             {
               currentList.map((item, index) => {
                 // const slots = {
                 //   default: () => 
                 // }
-                return <VirtualListItem key={(item as any)[this.itemKey] ?? (index)}>
+                return <VirtualListItem 
+                  key={(item as any)[this.itemKey] ?? (index)} 
+                  setItemSize={setItemSize} 
+                  hasItemSize={hasItemSize}>
                   {
                     this.$slots.item?.({item: item})[0]
                   }

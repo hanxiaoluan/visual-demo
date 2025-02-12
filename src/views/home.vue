@@ -5,9 +5,9 @@
   <Scrollbar style="height:200px;overflow: auto;margin-top: 50px">
     <div style="height: 2000px;width: 2000px; background-color: rgb(106, 121, 255);">Content</div>
   </Scrollbar> -->
-  <VirtualList :component="component" :data="data" :threshold="50">
+  <VirtualList :component="component" :data="data" :threshold="50" fixedSize :estimatedSize="25">
     <template #item="{item}">
-      <div>{{ item.label }}</div>
+      <div style="height: 25px;">{{ item.label }}</div>
     </template>
   </VirtualList>
 </template>
@@ -19,7 +19,7 @@ import VirtualList from '@/components/virtual-list'
 export default defineComponent({
   components: { Scrollbar, VirtualList },
   setup() {
-    const list = new Array(10000).fill(1).map((item, index) =>({value: index, label: `第${index+1}行测试数据，可以查看此时的dom是否是全部渲染，还是部分渲染`}))
+    const list = new Array(10000).fill(1).map((item, index) =>({value: index, label: `第${index}行测试数据，可以查看此时的dom是否是全部渲染，还是部分渲染`}))
       // new Array(60).fill({ value: 1, label: 1 }).map((item, index) => ({ value: String(index), label: `第${index+1}行测试数据，可以查看此时的dom是否是全部渲染，还是部分渲染`}))
 
     return {
