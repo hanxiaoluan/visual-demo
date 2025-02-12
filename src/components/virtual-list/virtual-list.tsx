@@ -56,7 +56,7 @@ export default defineComponent({
     reachBottom: (ev: Event) => true,
   },
   components: { VirtualListItem },
-  setup(props) {
+  setup(props, {emit}) {
     const { component, data, itemKey, fixedSize, estimatedSize, buffer, height} = toRefs(props)
     const containerRef = ref<HTMLElement>()
     const contentRef = ref<HTMLElement>()
@@ -112,6 +112,9 @@ export default defineComponent({
       console.log('ssssss')
       const {scrollTop, scrollHeight, offsetHeight} = e.target as HTMLElement
       console.log(e.target, scrollTop, scrollHeight, offsetHeight)
+
+      const _start = getStartByScroll(scrollTop)
+      emit
     }
 
     const scrollTo = (options: ScrollOptions) => {
