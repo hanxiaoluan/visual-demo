@@ -6,7 +6,7 @@ export const useSize = ({
   contentRef,
   fixedSize,
   estimatedSize,
-  buffer
+  buffer,
 }: {
   dataKeys: Ref<(string | number)[]>
   contentRef: Ref<HTMLElement | undefined>
@@ -42,7 +42,7 @@ export const useSize = ({
     }
     start.value = index
   }
- 
+
   const _estimatedSize = computed(() => {
     if (estimatedSize.value !== 30) {
       return estimatedSize.value
@@ -55,7 +55,7 @@ export const useSize = ({
   }
 
   const getItemSize = (index: number) => {
-    if(isFixed.value) {
+    if (isFixed.value) {
       return _estimatedSize.value
     }
     const _key = dataKeys.value[index]
@@ -67,7 +67,10 @@ export const useSize = ({
   }
 
   onMounted(() => {
-    const firstRangeTotalSize = Array.from(sizeMap.values()).reduce((pre, value) => pre + value, 0)
+    const firstRangeTotalSize = Array.from(sizeMap.values()).reduce(
+      (pre, value) => pre + value,
+      0,
+    )
     if (firstRangeTotalSize > 0) {
       firstRangeAverageSize.value = firstRangeTotalSize / sizeMap.size
     }
@@ -83,7 +86,7 @@ export const useSize = ({
 
   const getScrollOffset = (index: number) => {
     if (isFixed.value) {
-      return (_estimatedSize.value) * index
+      return _estimatedSize.value * index
     }
     return getOffset(0, index)
   }
@@ -96,6 +99,7 @@ export const useSize = ({
   })
 
   const getOffsetIndex = (scrollOffset: number) => {
+    console.log('------------getOffsetIndex')
     const isForward = scrollOffset >= frontPadding.value
     let offset = Math.abs(scrollOffset - frontPadding.value)
     const _start = isForward ? start.value : start.value - 1
@@ -109,6 +113,10 @@ export const useSize = ({
 
   const getStartByScroll = (scrollOffset: number) => {
     const offsetIndex = getOffsetIndex(scrollOffset)
+    const _start = start.value + offsetIndex - buffer.value
+    if (_start < 0) return 0
+    if (_start > maxStart.value) return maxStart.value
+    return _start
   }
 
   const behindPadding = computed(() => {
@@ -127,6 +135,6 @@ export const useSize = ({
     setItemSize,
     hasItemSize,
     setStart,
-    getScrollOffset
+    getScrollOffset,
   }
 }

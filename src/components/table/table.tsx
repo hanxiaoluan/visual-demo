@@ -1,8 +1,8 @@
 import type {
-  TableRowSelection, 
+  TableRowSelection,
   TableOperationColumn,
   TableData,
-  TableDataWithRaw
+  TableDataWithRaw,
 } from './interface'
 import TableBody from './table-tbody'
 import Tr from './table-tr'
@@ -13,8 +13,8 @@ import Thead from './table-thead'
 import Th from './table.th'
 import OperationTd from './table-operation-td'
 import './style/index.less'
-import {useRowSelection} from './hooks/use-row-selection'
-import {tableInjectionKey} from './context'
+import { useRowSelection } from './hooks/use-row-selection'
+import { tableInjectionKey } from './context'
 const prefixCls = `l-table`
 
 export default defineComponent({
@@ -22,28 +22,28 @@ export default defineComponent({
   props: {
     columns: {
       type: Array as PropType<any[]>,
-      default: () => []
+      default: () => [],
     },
     data: {
       type: Array as PropType<TableData[]>,
-      default: () => []
+      default: () => [],
     },
     hoverable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     bordered: {
       type: Boolean,
-      default: true
+      default: true,
     },
     selectedKeys: {
-      type: Array as PropType<(string | number)[]>
+      type: Array as PropType<(string | number)[]>,
     },
     defaultSelectedKeys: {
-      type: Array as PropType<(string | number)[]>
+      type: Array as PropType<(string | number)[]>,
     },
     rowSelection: {
-      type: Object as PropType<TableRowSelection>
+      type: Object as PropType<TableRowSelection>,
     },
     rowKey: {
       type: String,
@@ -51,10 +51,17 @@ export default defineComponent({
     },
   },
   emits: {
-    'update:selectedKeys': (rowKeys: (string|number)[]) => true
+    'update:selectedKeys': (rowKeys: (string | number)[]) => true,
   },
-  setup(props, {emit}) {
-    const {data, columns, selectedKeys, defaultSelectedKeys, rowSelection, rowKey} = toRefs(props)
+  setup(props, { emit }) {
+    const {
+      data,
+      columns,
+      selectedKeys,
+      defaultSelectedKeys,
+      rowSelection,
+      rowKey,
+    } = toRefs(props)
 
     const operations = computed(() => {
       const res: TableOperationColumn[] = []
@@ -63,7 +70,7 @@ export default defineComponent({
         selection = {
           name: `selection-${props.rowSelection.type}`,
           title: props.rowSelection.title!,
-          width: props.rowSelection.width!
+          width: props.rowSelection.width!,
         }
         res.push(selection!)
       }
@@ -76,7 +83,7 @@ export default defineComponent({
           const record: TableDataWithRaw = {
             raw: _record,
             key: _record[rowKey.value],
-            disabled: _record.disabled
+            disabled: _record.disabled,
           }
           result.push(record)
         }
@@ -116,82 +123,91 @@ export default defineComponent({
       return keys
     })
     const {
-      selectedRowKeys, 
-      handleSelect, 
+      selectedRowKeys,
+      handleSelect,
       currentSelectedRowKeys,
 
-      handleSelectAll
+      handleSelectAll,
     } = useRowSelection({
-      selectedKeys, 
-      defaultSelectedKeys, 
+      selectedKeys,
+      defaultSelectedKeys,
       currentAllRowKeys,
       currentAllEnabledRowKeys,
-      rowSelection, 
-      emit
+      rowSelection,
+      emit,
     })
 
-    provide(tableInjectionKey, reactive({
-      onSelect: handleSelect,
-      onSelectAll: handleSelectAll,
-      currentSelectedRowKeys,
-      currentAllEnabledRowKeys
-    }))
+    provide(
+      tableInjectionKey,
+      reactive({
+        onSelect: handleSelect,
+        onSelectAll: handleSelectAll,
+        currentSelectedRowKeys,
+        currentAllEnabledRowKeys,
+      }),
+    )
     const cls = computed(() => [
       prefixCls,
       {
         [`${prefixCls}-border`]: props.bordered,
-        [`${prefixCls}-hover`]: props.hoverable
-      }
+        [`${prefixCls}-hover`]: props.hoverable,
+      },
     ])
     const render = () => {
       return (
         <div class={cls.value}>
           <table class={`${prefixCls}-element`} cellpadding={0} cellspacing={0}>
-            <ColGroup dataColumns={props.columns} operations={operations.value} />
+            <ColGroup
+              dataColumns={props.columns}
+              operations={operations.value}
+            />
             <Thead>
               <Tr>
-                {
-                  operations.value.map((operation, index) => {
-                    return <OperationTh 
-                      operationColumn={operation} 
-                      showSelectAll={Boolean(props.rowSelection?.showCheckedAll && operation.name === 'selection-checkbox')} />
-                  })
-                }
-                {
-                  columns.value.map((column, index) => {
-                    return <Th column={column} />
-                  })
-                }
+                {operations.value.map((operation, index) => {
+                  return (
+                    <OperationTh
+                      operationColumn={operation}
+                      showSelectAll={Boolean(
+                        props.rowSelection?.showCheckedAll &&
+                          operation.name === 'selection-checkbox',
+                      )}
+                    />
+                  )
+                })}
+                {columns.value.map((column, index) => {
+                  return <Th column={column} />
+                })}
               </Tr>
             </Thead>
             <TableBody>
-              {
-                processedData.value.map((record, index) => {
-                  return <Tr>
-                    {
-                      operations.value.map((operation, index) => {
-                        return <OperationTd operationColumn={operation} selectedRowKeys={currentSelectedRowKeys.value} record={record}/>
-                      })
-                    }
-                    {
-                      columns.value.map((column) => {
-                        return <Td record={record} column={column} />
-                      })
-                    }
+              {processedData.value.map((record, index) => {
+                return (
+                  <Tr>
+                    {operations.value.map((operation, index) => {
+                      return (
+                        <OperationTd
+                          operationColumn={operation}
+                          selectedRowKeys={currentSelectedRowKeys.value}
+                          record={record}
+                        />
+                      )
+                    })}
+                    {columns.value.map((column) => {
+                      return <Td record={record} column={column} />
+                    })}
                   </Tr>
-                })
-              }
+                )
+              })}
             </TableBody>
           </table>
         </div>
-        
       )
     }
     return {
-      render
+      render,
     }
   },
-  render () {
+  render() {
     return this.render()
-  }
+  },
 })
