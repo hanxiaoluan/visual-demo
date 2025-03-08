@@ -1,5 +1,5 @@
 import { isNumber, isObject } from 'lodash-es'
-import { defineComponent, computed, createVNode } from 'vue'
+import { defineComponent, computed } from 'vue'
 import VirtualListItem from './virtual-list-item'
 import { useSize } from './use-size'
 import type { ScrollOptions } from './interface'
@@ -120,9 +120,39 @@ export default defineComponent({
       console.log(e.target, scrollTop, scrollHeight, offsetHeight)
 
       const _start = getStartByScroll(scrollTop)
+      if (_start !== start.value) {
+        setStart(_start)
+        nextTick(() => {
+          scrollTo(scrollTop)
+        })
+      }
+      emit('scroll', e)
+      const bottom = Math.floor(scrollHeight - (scrollTop + offsetHeight))
+      if (bottom <= 0) {
+        emit('reachBottom', e)
+      }
     }
 
-    const scrollTo = (options: ScrollOptions) => {}
+    const scrollTo = (options: ScrollOptions) => {
+      if (containerRef.value) {
+        if (isNumber(options)) {
+          containerRef.value.scrollTop = options
+        } else {
+          const _index =
+            options.index ?? dataKeys.value.indexOf(options.key ?? '')
+          setStart(_index - buffer.value)
+          containerRef.value.scrollTop = getScrollOffset(_index)
+          nextTick(() => {
+            if (containerRef.value) {
+              const _scrollTop = getScrollOffset(_index)
+              if (_scrollTop !== containerRef.value.scrollTop) {
+                containerRef.value.scrollTop = _scrollTop
+              }
+            }
+          })
+        }
+      }
+    }
     return {
       mergedComponent,
       containerRef,

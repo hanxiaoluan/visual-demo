@@ -106,7 +106,11 @@ export const useSize = ({
     let offsetIndex = 0
     while (offset > 0) {
       offset -= getItemSize(_start + offsetIndex)
-      isForward ? offsetIndex++ : offsetIndex--
+      if (isForward) {
+        offsetIndex++
+      } else {
+        offsetIndex--
+      }
     }
     return offsetIndex
   }
