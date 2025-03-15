@@ -8,38 +8,32 @@ export default defineComponent({
   props: {
     column: {
       type: Object as PropType<any>,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
-  setup (props) {
-    const {column} = toRefs(props)
+  setup(props) {
+    const { column } = toRefs(props)
 
-    const thCls = computed(() => [
-      `${prefixCls}`
-    ])
+    const thCls = computed(() => [`${prefixCls}`])
     const cellCls = computed(() => [
       `${cellPrefixCls}`,
-      `${cellPrefixCls}-align-${props.column.align ?? 'left'}`
+      `${cellPrefixCls}-align-${props.column.align ?? 'left'}`,
     ])
     const renderCell = () => (
-      <span class={cellCls.value}>
-        {column.value.title}
-      </span>
+      <span class={cellCls.value}>{column.value.title}</span>
     )
-    return {renderCell, thCls}
+    return { renderCell, thCls }
   },
-  render () {
-    const {renderCell, thCls} = this
-    return (
-      createVNode('th', 
+  render() {
+    const { renderCell, thCls } = this
+    return createVNode(
+      'th',
       {
-        class: thCls
-      }, 
+        class: thCls,
+      },
       {
-        default: () => [
-          renderCell()
-        ]
-      })
+        default: () => [renderCell()],
+      },
     )
-  }
+  },
 })

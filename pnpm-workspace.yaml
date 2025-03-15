@@ -1,0 +1,3 @@
+packages:
+  - 'packages/**'
+  - 'internal/*'  # 可选：存放应用类子包
