@@ -1,0 +1,17 @@
+{
+  "name": "@white/utils",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "pnpm unbuild"
+  },
+  "private": false,
+  "main": "dist/index.mjs",
+  "files": ["dist"],
+  "keywords": ["white", "utils"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}
