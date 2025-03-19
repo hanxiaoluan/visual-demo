@@ -29,16 +29,16 @@ export default defineConfig({
     Components({
       resolvers: [
         ArcoResolver({
-          sideEffect: true
-        })
-      ]
+          sideEffect: true,
+        }),
+      ],
     }),
-    vitePluginForArco({style: true}),
-    vueDevTools()
+    vitePluginForArco({ style: true }),
+    vueDevTools(),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
 })

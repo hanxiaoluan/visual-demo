@@ -12,17 +12,6 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
-  "dependencies": {
-    "@arco-design/web-vue": "^2.54.6",
-    "@vueuse/core": "^10.9.0",
-    "axios": "^1.7.9",
-    "lodash-es": "^4.17.21",
-    "mathjs": "^12.4.1",
-    "pinia": "^2.1.7",
-    "unocss": "^0.58.5",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
-  },
   "devDependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",
     "@iconify-json/mdi": "^1.1.64",
