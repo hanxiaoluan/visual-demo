@@ -10,7 +10,7 @@
   "files": ["dist"],
   "keywords": ["white", "utils"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "lodash-es": "^4.17.21"
   }
